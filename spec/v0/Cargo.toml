@@ -5,6 +5,6 @@ edition = "2021"
 
 description = "Rey v0 reference interpreter"
 license = "MIT"
-authors = ["Misbah Khursheed <your@email.com>"]
+authors = ["Misbah Khursheed <m.misbahkhursheed@gmail.com>"]
 
 [dependencies]
