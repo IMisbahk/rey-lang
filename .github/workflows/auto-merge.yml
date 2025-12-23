@@ -1,0 +1,24 @@
+name: Auto Merge PRs
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    types: [ opened, synchronise, reopened ]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+
+    if: github.actor == 'IMisbahk'
+
+    steps:
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: merge
