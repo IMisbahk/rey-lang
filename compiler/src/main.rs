@@ -1,3 +1,4 @@
+mod ast;
 mod lexer;
 mod parser;
 
@@ -6,7 +7,9 @@ use parser::Parser;
 
 fn main() {
     let source = r#"
-        var x = "hello";
+        func main(): Void {
+            println("Hello World!");
+        }
     "#;
 
     let mut lexer = Lexer::new(source);
@@ -29,6 +32,10 @@ fn main() {
     }
     println!("Parsing Started.");
     let mut parser = Parser::new(tokens);
-    parser.parse();
+    let ast = parser.parse();
     println!("Program parsed!");
+    println!("AST:");
+    for stmt in &ast {
+        println!("{:?}", stmt);
+    }
 }
