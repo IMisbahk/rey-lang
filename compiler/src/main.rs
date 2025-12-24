@@ -6,10 +6,7 @@ use parser::{Parser};
 
 fn main() {
     let source = r#"
-        var x = "hello": String;
-
-        
-
+        var x = "hello";
     "#;
 
     let mut lexer = Lexer::new(source);
@@ -29,9 +26,9 @@ fn main() {
                 break;}
             }
     }
-
+    println!("Parsing Started.");
     let mut parser = Parser::new(tokens);
     parser.parse();
-
+    println!("Program parsed!");
 
 }
