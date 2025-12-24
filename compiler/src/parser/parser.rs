@@ -7,9 +7,7 @@ pub struct Parser {
 }
 impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
-        Self {
-            tokens,
-            current: 0,}
+        Self { tokens, current: 0 }
     }
     pub fn parse(&mut self) {
         while !self.isAtEnd() {
@@ -20,15 +18,19 @@ impl Parser {
     //parsing statements
     fn parseStatement(&mut self) {
         if self.matchToken(&TokenKind::Var) {
-            self.parseVarDeclaration();} 
-        else {
-            self.parseExpressionStatement();}
+            self.parseVarDeclaration();
+        } else {
+            self.parseExpressionStatement();
+        }
     }
     fn parseVarDeclaration(&mut self) {
         self.consumeIdentifier("Expected variable name.");
         self.consume(&TokenKind::Equal, "Expected '=' after variable name.");
         self.parseExpression();
-        self.consume(&TokenKind::Semicolon, "Expected ';' after variable declaration.");
+        self.consume(
+            &TokenKind::Semicolon,
+            "Expected ';' after variable declaration.",
+        );
     }
     fn parseExpressionStatement(&mut self) {
         self.parseExpression();
@@ -36,14 +38,18 @@ impl Parser {
     }
 
     fn parseTypeAnnotation(&mut self) -> Option<Type> {
-    if self.matchToken(&TokenKind::Colon) {
-        match &self.peek().kind {
-            TokenKind::Identifier(name) => {
-                let ty = Type { name: name.clone() };
-                self.advance();
-                Some(ty);
-            } _ => self.error("Expected type name after ':'"),}}
-    else {None}
+        if self.matchToken(&TokenKind::Colon) {
+            match &self.peek().kind {
+                TokenKind::Identifier(name) => {
+                    let ty = Type { name: name.clone() };
+                    self.advance();
+                    Some(ty);
+                }
+                _ => self.error("Expected type name after ':'"),
+            }
+        } else {
+            None
+        }
     }
     fn parseAdditive(&mut self) -> Expr {
         let mut expr = self.parseUnary();
@@ -62,37 +68,36 @@ impl Parser {
         expr
     }
 
-
-   //expressions
+    //expressions
     fn parseExpression(&mut self) {
         match &self.peek().kind {
-            TokenKind::Identifier(_) |
-            TokenKind::StringLiteral(_) |
-            TokenKind::NumberLiteral(_) |
-            TokenKind::True |
-            TokenKind::False |
-            TokenKind::Null => {
+            TokenKind::Identifier(_)
+            | TokenKind::StringLiteral(_)
+            | TokenKind::NumberLiteral(_)
+            | TokenKind::True
+            | TokenKind::False
+            | TokenKind::Null => {
                 self.advance();
             }
             _ => self.error("Expected expression."),
         }
     }
 
-
     //token utils
     fn matchToken(&mut self, kind: &TokenKind) -> bool {
         if self.check(kind) {
             self.advance();
             true
-        } 
-        else {
-            false }
+        } else {
+            false
+        }
     }
     fn consume(&mut self, kind: &TokenKind, message: &str) {
         if self.check(kind) {
-            self.advance();} 
-        else {
-            self.error(message);}
+            self.advance();
+        } else {
+            self.error(message);
+        }
     }
     fn consumeIdentifier(&mut self, message: &str) {
         match &self.peek().kind {
@@ -104,12 +109,14 @@ impl Parser {
     }
     fn check(&self, kind: &TokenKind) -> bool {
         if self.isAtEnd() {
-            return false;}
+            return false;
+        }
         std::mem::discriminant(&self.peek().kind) == std::mem::discriminant(kind)
     }
     fn advance(&mut self) -> &Token {
         if !self.isAtEnd() {
-            self.current += 1;}
+            self.current += 1;
+        }
         self.previous()
     }
     fn isAtEnd(&self) -> bool {
@@ -119,18 +126,15 @@ impl Parser {
         &self.tokens[self.current]
     }
     fn previous(&self) -> &Token {
-       if self.current == 0 {
-        &self.tokens[0]
-    } else {
-        &self.tokens[self.current - 1]
-    }
+        if self.current == 0 {
+            &self.tokens[0]
+        } else {
+            &self.tokens[self.current - 1]
+        }
     }
 
     //error
     fn error(&self, message: &str) -> ! {
-        panic!(
-            "Parse error at {:?}: {}",
-            self.peek().span, message
-        );
+        panic!("Parse error at {:?}: {}", self.peek().span, message);
     }
 }

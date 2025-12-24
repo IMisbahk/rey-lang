@@ -2,7 +2,7 @@ mod lexer;
 mod parser;
 
 use lexer::{Lexer, TokenKind};
-use parser::{Parser};
+use parser::Parser;
 
 fn main() {
     let source = r#"
@@ -11,7 +11,7 @@ fn main() {
 
     let mut lexer = Lexer::new(source);
     let mut tokens = Vec::new();
-    
+
     loop {
         match lexer.nextToken() {
             Ok(token) => {
@@ -23,12 +23,12 @@ fn main() {
             }
             Err(err) => {
                 println!("Lexer error: {:?}", err);
-                break;}
+                break;
             }
+        }
     }
     println!("Parsing Started.");
     let mut parser = Parser::new(tokens);
     parser.parse();
     println!("Program parsed!");
-
 }
