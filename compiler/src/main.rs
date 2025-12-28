@@ -48,13 +48,6 @@ fn main() {
     let mut parser = Parser::new(tokens);
     match parser.parse() {
         Ok(ast) => {
-            println!("Program parsed successfully!");
-            println!("AST:");
-            for stmt in &ast {
-                println!("{:?}", stmt);
-            }
-            println!("Executing program...");
-
             let mut interpreter = Interpreter::new();
             match interpreter.interpret(&ast) {
                 Ok(()) => {

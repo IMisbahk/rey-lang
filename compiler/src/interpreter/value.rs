@@ -1,10 +1,13 @@
 use crate::ast::Literal;
 
+use super::function::Function;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     String(String),
     Number(f64),
     Bool(bool),
+    Function(Function),
     Null,
 }
 

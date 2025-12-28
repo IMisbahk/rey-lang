@@ -31,8 +31,8 @@ impl Evaluator {
             
                 Err("Assignment should be handled by executor".to_string())
             }
-            Expr::Call { .. } => {
-                Err("Function calls not implemented yet".to_string())
+            Expr::Call { callee, args } => {
+                Err("Function calls must be handled as statements".to_string())
             }
             Expr::Get { .. } => {
                 Err("Property access not implemented yet".to_string())

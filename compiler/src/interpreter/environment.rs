@@ -1,9 +1,19 @@
 use std::collections::HashMap;
+use std::rc::Rc;
 use super::value::Value;
 
 pub struct Environment {
     values: HashMap<String, Value>,
-    parent: Option<Box<Environment>>,
+    parent: Option<Rc<Environment>>,
+}
+
+impl Clone for Environment {
+    fn clone(&self) -> Self {
+        Self {
+            values: self.values.clone(),
+            parent: self.parent.clone(),
+        }
+    }
 }
 
 impl Environment {
@@ -13,10 +23,10 @@ impl Environment {
             parent: None,
         }
     }
-    pub fn withParent(parent: Environment) -> Self {
+    pub fn with_parent(parent: Environment) -> Self {
         Self {
             values: HashMap::new(),
-            parent: Some(Box::new(parent)),
+            parent: Some(Rc::new(parent)),
         }
     }
 
@@ -40,8 +50,6 @@ impl Environment {
         if self.values.contains_key(name) {
             self.values.insert(name.to_string(), value);
             Ok(())
-        } else if let Some(parent) = &mut self.parent {
-            parent.assign(name, value)
         } else {
             Err(format!("Undefined variable '{}'", name))
         }
